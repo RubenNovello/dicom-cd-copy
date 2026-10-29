@@ -1,4 +1,4 @@
-# dicom-cd-copy
+# DICOM CD COPY
 
 # 💿 dicom-cd-copy
 
