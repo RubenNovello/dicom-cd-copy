@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+DEV=/dev/sr0
+
+# monta il disco se non lo è già
+MNT=$(findmnt -n -o TARGET "$DEV" || true)
+if [ -z "$MNT" ]; then
+  udisksctl mount -b "$DEV" >/dev/null
+  MNT=$(findmnt -n -o TARGET "$DEV")
+fi
+
+# cartella di destinazione: nome del disco + data
+DEST="$HOME/dicom_$(basename "$MNT")_$(date +%Y%m%d)"
+mkdir -p "$DEST"
+
+# copia con avanzamento, poi espelle
+rsync -ah --info=progress2 "$MNT"/ "$DEST"/
+sync
+eject "$DEV"
+echo "Fatto: $DEST"
